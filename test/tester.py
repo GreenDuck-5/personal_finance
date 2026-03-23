@@ -31,6 +31,8 @@ def show_line_graph():
     plt.legend()
     plt.show()
 
+def tester():
+    print("Hello")
 # Main Window Setup
 root = tk.Tk()
 root.title("Graph Menu")
@@ -46,9 +48,11 @@ graph_menu.add_command(label="Show Line Graph", command=show_line_graph)
 graph_menu.add_separator()
 graph_menu.add_command(label="Exit", command=root.quit)
 
+edit_menu = tk.Menu(menubar,tearoff=0)
+
 # Attach the dropdown to the Menu Bar
 menubar.add_cascade(label="Select Graph", menu=graph_menu)
-
+menubar.add_cascade(lable="Edit spendings", menu = graph_menu)
 # Set the menu on the window
 root.config(menu=menubar)
 
