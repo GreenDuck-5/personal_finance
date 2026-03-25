@@ -52,6 +52,27 @@ menubar.add_cascade(label="Select Graph", menu=graph_menu)
 # Set the menu on the window
 root.config(menu=menubar)
 
+
+
+
+
+#TESTING FOR NEW SECTION
+g_menu = tk.Menu(menubar, tearoff=0)
+g_menu.add_command(label="Placement 1", command=show_pie_chart)
+g_menu.add_command(label="placement 2", command=show_line_graph)
+g_menu.add_separator()
+g_menu.add_command(label="Exit", command=root.quit)
+
+# Attach the dropdown to the Menu Bar
+menubar.add_cascade(label="Tester", menu=g_menu)
+
+
+
+
+
+# Set the menu on the window
+root.config(menu=menubar)
+
 # Add a simple instruction label
 label = tk.Label(root, text="Select a graph from the menu above", pady=20)
 label.pack()
