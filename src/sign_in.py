@@ -38,4 +38,4 @@
 
     #Return whatever they use to sign in or sign up
 
-    #Afterward use .clear() and swap to the menu file
+    #Afterward use .clear()
