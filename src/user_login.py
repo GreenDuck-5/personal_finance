@@ -7,4 +7,4 @@
     # I want password requirements: 12+ characters long, 1+ number, 1+ UPPERCASE,  1+ lowercase, 1+ special character
 
 # Sign in Function
-    # This will take in a username AND a password (HASH IT). Then go into information.csv and for each line, check if both username AND HASHED password MATCH. If both match, get the csv name FROM THE SAME ROW and save it as current CSV variable(?). Tell user that they have successfully signed in.
+    # This will take in a username AND a password (HASH IT). Then go into information.csv and for each line, check if both username AND HASHED password MATCH(column 0 and 1). If both match, get the csv name FROM THE SAME ROW and save it as current CSV variable(?). Tell user that they have successfully signed in.
