@@ -1,6 +1,9 @@
 # DJ, 1st, Saving Program
 
+
+
 #ask user what they would like to do: create saving plan, view saving plan, quit
+choice = input()
 
 # if user picks create: run create saving plan function
 
