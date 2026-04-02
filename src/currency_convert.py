@@ -2,6 +2,7 @@
 # Code for converting the current money being used and displayed
 
 # Have a default that is USD. Ryan can make a drop down for selecting the currency. Identify which currency is selected and apply a corresponding convertion expresion to base USD
+# BUILD
 
 # Currency being used: 
     # Euros -> USD_amound * 0.87
