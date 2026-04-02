@@ -24,7 +24,7 @@ class App(ctk.CTk):
         self.title("Main Application")
 
         # Center Button to open the settings view
-        self.button = ctk.CTkButton(self, text="Open User Settings", command=self.show_settings_page)
+        self.button = ctk.CTkButton(self, text="Sign in", command=self.show_settings_page)
         self.button.pack(expand=True)
         self.current_widgets.append(self.button) # Track the new widget
 
@@ -35,10 +35,10 @@ class App(ctk.CTk):
 
     def show_settings_page(self):
         self.clear_window()
-        self.title("User Settings")
+        self.title("User Sign in")
 
         # Header Label
-        header = ctk.CTkLabel(self, text="Enter Your Details", font=("Helvetica", 20, "bold"))
+        header = ctk.CTkLabel(self, text="Enter Your Username and password", font=("Helvetica", 20, "bold"))
         header.pack(pady=(20, 10))
         self.current_widgets.append(header)
 
@@ -47,13 +47,9 @@ class App(ctk.CTk):
         self.name_entry.pack(pady=10)
         self.current_widgets.append(self.name_entry)
 
-        # Number Input (Age)
-        age_label = ctk.CTkLabel(self, text="Select Age Range:", font=("Helvetica", 12))
-        age_label.pack(pady=(10, 0))
-        self.current_widgets.append(age_label)
 
-        self.age_option = ctk.CTkSegmentedButton(self, values=["18-25", "26-40", "41-60", "60+"])
-        self.age_option.set("26-40") # Default value
+        #password
+        self.age_option = ctk.CTkEntry(self, placeholder_text= "Enter your password", width = 250)
         self.age_option.pack(pady=10)
         self.current_widgets.append(self.age_option)
 
