@@ -61,7 +61,39 @@ def sign_up():
 
 # Sign in Function
     # This will take in a username AND a password (HASH IT). Then go into the information csv and for each line, check if both username AND HASHED password MATCH(column 0 and 1) the given information. If both match, get the csv name FROM THE SAME ROW and save it as current CSV variable(?). Tell user that they have successfully signed in.
-    # BUILD
+def sign_in():
+    while True:
+        # Get the username and password
+        username = input("Enter your username:\n").strip()
+        password = input("Enter your password:\n").strip()
+        # hash the password
+        hashed_pass = hash_item(password)
+        try:
+            # open the user_login_info file to compare
+            with open("docs\user_login_info.csv", "r") as file:
+                # default is no match
+                match = False
+                reader = csv.reader(file)
+
+                for row in reader:
+                    if row[0] == username and row[1] == hashed_pass:
+                        # There is a match. Also gab the csv name for this user
+                        match == True
+                        current_csv = row[2]
+                        break
+                    else:
+                        continue
+        except Exception as e:
+            print(f"Could not open file in SIGN_IN func. Reason: {e}")
+        
+        # Finished with the file. Now check if there was a match
+        if match == True:
+            # There was a match. return the csv name for this signed in user
+            print("Signed in successfully.")
+            return current_csv
+        else:
+            print("Username and/or password incorrect. Please try again")
+            continue
 
 # HELPERS
 def pass_requirements(password):
