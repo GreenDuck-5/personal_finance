@@ -1,5 +1,5 @@
 import customtkinter as ctk
-
+from user_login import sign_in, sign_up
 # Set the appearance and color theme
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -20,7 +20,31 @@ class App(ctk.CTk):
         self.current_widgets.clear()
 
     def show_sign_up_page(self):
-        pass
+        self.clear_window()
+        self.title("Sign Up")
+
+        header = ctk.CTkLabel(self, text="Enter Your Username and password", font=("Helvetica", 20, "bold"))
+        header.pack(pady=(20, 10))
+        self.current_widgets.append(header)
+
+        self.name_entry = ctk.CTkEntry(self, placeholder_text="Enter your username...", width=250)
+        self.name_entry.pack(pady=10)
+        self.current_widgets.append(self.name_entry)
+
+        self.password_entry = ctk.CTkEntry(self, placeholder_text= "Enter your password", width = 250)
+        self.password_entry.pack(pady=10)
+        self.current_widgets.append(self.password_entry)
+
+        #Create save button that imploys lizzies sing up function
+        save_bt = ctk.CTkButton(self, text="Save & Return", command=self.get_data(2))
+        save_bt.pack(pady=30)
+        self.current_widgets.append(save_bt)
+
+        
+        self.data_label = ctk.CTkLabel(self, text="Enter the password you would like\nPassword must be 12 characters long (maximum is 40), have a number, have an uppercase, have a lowercase, have a special character, and NO spaces\n", font=("Helvetica", 14))
+        self.data_label.pack(pady=20)
+        self.current_widgets.append(self.data_label)
+        
 
     def show_main_page(self):
 
@@ -28,7 +52,7 @@ class App(ctk.CTk):
         self.title("Main Application")
 
         # Center Button to open the settings view
-        self.button = ctk.CTkButton(self, text="Sign in", command=self.show_sign_in_page)
+        self.button = ctk.CTkButton(self, text="Sign in", command=self.show_sign_in_page(1))
         self.button.pack(expand=True)
         self.current_widgets.append(self.button) # Track the new widget
 
@@ -63,7 +87,7 @@ class App(ctk.CTk):
         self.current_widgets.append(header)
 
         # Text Input (Name)
-        self.name_entry = ctk.CTkEntry(self, placeholder_text="Enter your name...", width=250)
+        self.name_entry = ctk.CTkEntry(self, placeholder_text="Enter your username...", width=250)
         self.name_entry.pack(pady=10)
         self.current_widgets.append(self.name_entry)
 
@@ -78,21 +102,25 @@ class App(ctk.CTk):
         save_btn.pack(pady=30)
         self.current_widgets.append(save_btn)
 
-    def get_data(self):
+    def get_data(self,x):
         # Retrieve the values from inputs
         name = self.name_entry.get()
         password = self.password_entry.get()
         print(f"User Name: {name}, Password: {password}")
         
         # Update the main page's label before returning to it
-        if name != "Ryan" or password != "1234":
-            self.show_main_page()
+        if x == 1: #Sign in
+            current_csv = sign_in(name,password)
+            self.show_main_page()  #NEED TO PLUG IN LIZZIES CODE
             self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
-        else:
-            #Have them sent to the main button area
-            pass
 
-
+        if x == 2: #sign up
+            current_csv = sign_up(name, password)
+            self.show_main_page()  #NEED TO PLUG IN LIZZIES CODE
+            self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
 if __name__ == "__main__":
     app = App()
     app.mainloop()
+
+#Lizzie_eevee
+#M1stB0rn
