@@ -7,10 +7,10 @@ import csv
     # This will take in a username that the user wants to use. I will then go into the information csv to compare to the first column (which should be usernames) and check if the username is unique (username != csv name is TRUE). If the username is unique I will ask for a password and HASH it so that I can compare it to the HASHED passwords in the CSV column 2(the hased passwords). I will then check if the HASHED password is unique, and if it is, tell the user sign up is sucessful and create a separate CSV for them. (maybe we have a variable that is the name of the active CSV and I return that)
 
     # I want password requirements: 12+ characters long, 1+ number, 1+ UPPERCASE,  1+ lowercase, 1+ special character
-def sign_up():
+def sign_up(typed_user, typed_pass):
     # Get username
     while True:
-        username = input("Enter the username you would like:\n").strip()
+        username = typed_user.strip()
         user_avaliable = item_avaliable(username, 0)
         if user_avaliable == True:
             # Valid username, break to do the password
@@ -20,8 +20,7 @@ def sign_up():
             continue
     # Get password
     while True:
-        print("Enter the password you would like\nPassword must be 12 characters long (maximum is 40), have a number, have an uppercase, have a lowercase, have a special character, and NO spaces\n")
-        the_password = input("Enter your chosen password:\n").strip()
+        the_password = typed_pass.strip()
         pass_valid = pass_requirements(the_password)
         if pass_valid == True:
             # password meets requirements. Now check if password avaliable
@@ -56,21 +55,21 @@ def sign_up():
         print(f"Could not make user file in SIGN_UP func. Reason: {e}")
     
     # The username is what is used to create a CSV for that user. Returning the current CSV name so that it can be used else where
-    current_csv = username
+    current_csv = f"docs/{username}.csv"
     return current_csv
 
 # Sign in Function
     # This will take in a username AND a password (HASH IT). Then go into the information csv and for each line, check if both username AND HASHED password MATCH(column 0 and 1) the given information. If both match, get the csv name FROM THE SAME ROW and save it as current CSV variable(?). Tell user that they have successfully signed in.
-def sign_in():
+def sign_in(typed_user, typed_pass):
     while True:
         # Get the username and password
-        username = input("Enter your username:\n").strip()
-        password = input("Enter your password:\n").strip()
+        username = typed_user.strip()
+        password = typed_pass.strip()
         # hash the password
         hashed_pass = hash_item(password)
         try:
             # open the user_login_info file to compare
-            with open("docs\user_login_info.csv", "r") as file:
+            with open("docs/user_login_info.csv", "r") as file:
                 # default is no match
                 match = False
                 reader = csv.reader(file)
