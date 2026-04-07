@@ -7,3 +7,10 @@
 # Final print out example: Income and Expenses for {date}: {Full Date}: ${any income} Income, ${expense} Expenses, ${food} in Food Catagory, ${savings} in Savings catagory, *any other catagories*
 
 # BUILD
+def find_stuff_from_date(csv_path):
+    def get_date_part(part):
+        print(f"Enter the number for {part}:\n")
+    # user will type in day, month, and year they want to check. Tell them that if they don't want to check that catagorie, type 'none'
+    # If user types 'none' for any of them, set it to 
+    print("1) Find by YEAR\n2) Find by MONTH\n3) Find by DAY\n4) YEAR & MONTH\n5) MONTH & DAY\n6) YEAR & DAY\n7) YEAR & MONTH & DAY\n")
+    action = input("Enter the number corresponding to how you want to find information")
