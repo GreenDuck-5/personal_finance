@@ -6,11 +6,12 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 class App(ctk.CTk):
-    def __init__(self):
+    def __init__(self, x):
         super().__init__()
         self.title("Main Application")
         self.geometry("800x800") # Adjusted geometry to fit both pages if needed
         self.current_widgets = [] # List to keep track of widgets to destroy
+        self.x = x
 
         self.show_main_page()
 
@@ -37,14 +38,16 @@ class App(ctk.CTk):
         self.current_widgets.append(self.password_entry)
 
         #Create save button that imploys lizzies sing up function
-        save_bt = ctk.CTkButton(self, text="Save & Return", command=self.get_data(2))
+        save_bt = ctk.CTkButton(self, text="Save & Return", command=self.get_data)
         save_bt.pack(pady=30)
         self.current_widgets.append(save_bt)
 
                     #CHECK TO SEE IF LABLE AND SING IN STUFF WORKS
-        self.data_label = ctk.CTkLabel(self, text="Enter the password you would like\nPassword must be 12 characters long (maximum is 40), have a number, have an uppercase, have a lowercase, have a special character, and NO spaces\n", font=("Helvetica", 14))
+        self.data_label = ctk.CTkLabel(self, text="Enter the password you would like\nPassword must be 12 characters long (maximum is 40), have a number, have an uppercase, have a lowercase, have a special character, and NO spaces\nIf you want to go back to main, type EXIT in username and EXIT in password", font=("Helvetica", 14))
         self.data_label.pack(pady=20)
         self.current_widgets.append(self.data_label)
+
+        self.x = 2
         
 
     def show_main_page(self):
@@ -53,7 +56,7 @@ class App(ctk.CTk):
         self.title("Main Application")
 
         # Center Button to open the settings view
-        self.button = ctk.CTkButton(self, text="Sign in", command=self.show_sign_in_page(1))
+        self.button = ctk.CTkButton(self, text="Sign in", command=self.show_sign_in_page)
         self.button.pack(expand=True)
         self.current_widgets.append(self.button) # Track the new widget
 
@@ -103,24 +106,47 @@ class App(ctk.CTk):
         save_btn.pack(pady=30)
         self.current_widgets.append(save_btn)
 
-    def get_data(self,x):
+        self.data_label = ctk.CTkLabel(self, text="If you want to go back to main, type EXIT in username and EXIT in password (ALL CAPS)", font=("Helvetica", 14))
+        self.data_label.pack(pady=20)
+        self.current_widgets.append(self.data_label)
+        self.x = 1
+
+
+
+    def get_data(self):
         # Retrieve the values from inputs
         name = self.name_entry.get()
         password = self.password_entry.get()
         print(f"User Name: {name}, Password: {password}")
         
         # Update the main page's label before returning to it
-        if x == 1: #Sign in
-            current_csv = sign_in(name,password)
-            self.show_main_page()  #NEED TO PLUG IN LIZZIES CODE
+        if self.x == 1: #log in
+            if name == "EXIT" and password == "EXIT":
+                self.show_main_page()
+            else:
+                current_csv, check =sign_in(name,password)
+                self.check = check
+                self.current_csv = current_csv
+            if self.check == True:
+                print("WORKS!!!")
+                pass
+            else:
+                self.show_main_page()
+                self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
+
+        if self.x == 2: #sign up
+            if name == "EXIT" and password == "EXIT":
+                self.show_main_page()
+            else:
+                self.current_csv = sign_up(name, password)
+                self.show_main_page()
+                print("WORKS!!!")
+                #Create the new menu
             self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
 
-        if x == 2: #sign up
-            current_csv = sign_up(name, password)
-            self.show_main_page()  #NEED TO PLUG IN LIZZIES CODE
-            self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
+
 if __name__ == "__main__":
-    app = App()
+    app = App(x = 0)
     app.mainloop()
 
 #Lizzie_eevee
