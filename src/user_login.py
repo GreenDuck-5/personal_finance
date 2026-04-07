@@ -9,32 +9,32 @@ import csv
     # I want password requirements: 12+ characters long, 1+ number, 1+ UPPERCASE,  1+ lowercase, 1+ special character
 def sign_up(typed_user, typed_pass):
     # Get username
-    while True:
-        username = typed_user.strip()
-        user_avaliable = item_avaliable(username, 0)
-        if user_avaliable == True:
-            # Valid username, break to do the password
-            break
-        else:
-            print("It seems that the username you typed is already taken. Enter something else.")
-            continue
-    # Get password
-    while True:
-        the_password = typed_pass.strip()
-        pass_valid = pass_requirements(the_password)
-        if pass_valid == True:
-            # password meets requirements. Now check if password avaliable
-            pass
-        else:
-            print("Your password doesn't have the nessisary requirements. Please enter a different password")
-            continue
-        pass_avaliable = item_avaliable(the_password, 1)
-        if pass_avaliable == True:
-            # password avaliable and meets requirements. Break so that info can be added to user_login_info CSV
-            break
-        else:
-            print("It seems that the password you typed has already been taken. Please enter a different password")
-            continue
+
+    username = typed_user.strip()
+    user_avaliable = item_avaliable(username, 0)
+    if user_avaliable == True:
+        # Valid username, break to do the password
+        pass
+    else:
+        print("It seems that the username you typed is already taken. Enter something else.")
+        
+# Get password
+
+    the_password = typed_pass.strip()
+    pass_valid = pass_requirements(the_password)
+    if pass_valid == True:
+        # password meets requirements. Now check if password avaliable
+        pass
+    else:
+        print("Your password doesn't have the nessisary requirements. Please enter a different password")
+        
+    pass_avaliable = item_avaliable(the_password, 1)
+    if pass_avaliable == True:
+        # password avaliable and meets requirements. Break so that info can be added to user_login_info CSV
+        pass
+    else:
+        print("It seems that the password you typed has already been taken. Please enter a different password")
+        
     # Add info to CSV
     hashed_pass = hash_item(the_password) # get the entered password hashed
     try:
@@ -61,38 +61,40 @@ def sign_up(typed_user, typed_pass):
 # Sign in Function
     # This will take in a username AND a password (HASH IT). Then go into the information csv and for each line, check if both username AND HASHED password MATCH(column 0 and 1) the given information. If both match, get the csv name FROM THE SAME ROW and save it as current CSV variable(?). Tell user that they have successfully signed in.
 def sign_in(typed_user, typed_pass):
-    while True:
         # Get the username and password
-        username = typed_user.strip()
-        password = typed_pass.strip()
-        # hash the password
-        hashed_pass = hash_item(password)
-        try:
-            # open the user_login_info file to compare
-            with open("docs/user_login_info.csv", "r") as file:
-                # default is no match
-                match = False
-                reader = csv.reader(file)
+    username = typed_user.strip()
+    password = typed_pass.strip()
+    current_csv = " "
+    # hash the password
+    hashed_pass = hash_item(password)
+    try:
+        # open the user_login_info file to compare
+        with open("docs/user_login_info.csv", "r") as file:
+            # default is no match
+            match = False
+            reader = csv.reader(file)
 
-                for row in reader:
-                    if row[0] == username and row[1] == hashed_pass:
-                        # There is a match. Also gab the csv name for this user
-                        match == True
-                        current_csv = row[2]
-                        break
-                    else:
-                        continue
-        except Exception as e:
-            print(f"Could not open file in SIGN_IN func. Reason: {e}")
+            for row in reader:
+                if row[0] == username and row[1] == hashed_pass:
+                    # There is a match. Also gab the csv name for this user
+                    match == True
+                    current_csv = row[2]
+                    break
+                else:
+                    continue
+    except Exception as e:
+        print(f"Could not open file in SIGN_IN func. Reason: {e}")
+        current_csv = "docs/fail_safe.csv"
+    
+    # Finished with the file. Now check if there was a match
+    if match == True:
+        # There was a match. return the csv name for this signed in user
+        print("Signed in successfully.")
+        return current_csv, True
+    else:
+        print("Username and/or password incorrect. Please try again")
+        return current_csv, False
         
-        # Finished with the file. Now check if there was a match
-        if match == True:
-            # There was a match. return the csv name for this signed in user
-            print("Signed in successfully.")
-            return current_csv
-        else:
-            print("Username and/or password incorrect. Please try again")
-            continue
 
 # HELPERS
 def pass_requirements(password):
