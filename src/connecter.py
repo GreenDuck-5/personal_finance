@@ -111,7 +111,12 @@ class App(ctk.CTk):
         self.current_widgets.append(self.data_label)
         self.x = 1
 
-
+    def show_new_page(self):
+        self.clear_window()
+        self.title("Hello, you are singed in")
+        self.button = ctk.CTkButton(self, text="Sign out", command=self.show_main_page)
+        self.button.pack(expand=True)
+        self.current_widgets.append(self.button) # Track the new widget
 
     def get_data(self):
         # Retrieve the values from inputs
@@ -128,7 +133,7 @@ class App(ctk.CTk):
                 self.check = check
                 self.current_csv = current_csv
             if self.check == True:
-                print("WORKS!!!")
+                self.show_new_page()
                 pass
             else:
                 self.show_main_page()
@@ -138,11 +143,12 @@ class App(ctk.CTk):
             if name == "EXIT" and password == "EXIT":
                 self.show_main_page()
             else:
-                self.current_csv = sign_up(name, password)
-                self.show_main_page()
-                print("WORKS!!!")
+                self.current_csv, self.check = sign_up(name, password)
+                if self.check == True:
+                    self.show_new_page()
                 #Create the new menu
-            self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
+                else:
+                    self.data_label.configure(text=f"Your username and password do not match the requirments...")
 
 
 #Lizzie_eevee

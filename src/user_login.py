@@ -56,7 +56,7 @@ def sign_up(typed_user, typed_pass):
     
     # The username is what is used to create a CSV for that user. Returning the current CSV name so that it can be used else where
     current_csv = f"docs/{username}.csv"
-    return current_csv
+    return current_csv, pass_avaliable
 
 # Sign in Function
     # This will take in a username AND a password (HASH IT). Then go into the information csv and for each line, check if both username AND HASHED password MATCH(column 0 and 1) the given information. If both match, get the csv name FROM THE SAME ROW and save it as current CSV variable(?). Tell user that they have successfully signed in.
@@ -77,7 +77,7 @@ def sign_in(typed_user, typed_pass):
             for row in reader:
                 if row[0] == username and row[1] == hashed_pass:
                     # There is a match. Also gab the csv name for this user
-                    match == True
+                    match = True
                     current_csv = row[2]
                     break
                 else:
