@@ -1,5 +1,6 @@
 # LD 1st
 import csv
+import time
 from helper_funcs import *
 # Function for reading the active CSV and pulling any information for the specified time period by the user
 
@@ -58,54 +59,63 @@ def find_stuff_from_date(csv_path):
                             print("Hahaha, something went very wrong. . . .")
         except Exception as e:
             print(f"Could not open file in FIND_STUFF_FROM_DATE func in get_csv_info file.\nReason: {e}")
+        return found_info
     # user will type in day, month, and year they want to check. Tell them that if they don't want to check that catagorie, type 'none'
     # If user types 'none' for any of them, set it to 
     while True:
+        day = "None"
+        month = "None"
+        year = "None"
         type_print("1) Find by YEAR\n2) Find by MONTH\n3) Find by DAY\n4) YEAR & MONTH\n5) MONTH & DAY\n6) YEAR & DAY\n7) YEAR & MONTH & DAY\n")
         action = input("Enter the number corresponding to how you want to find information;\n")
         if action == "1":
             # year only
             year = get_date_part("year")
-            file_thru_csv(year, point="year")
+            found_info = file_thru_csv(year, point="year")
             break
         elif action == "2":
             # month only
             month = get_date_part('month')
-            file_thru_csv(month, point="month")
+            found_info = file_thru_csv(month, point="month")
             break
         elif action == "3":
             # day only
             day = get_date_part("day")
-            file_thru_csv(day, point="day")
+            found_info =file_thru_csv(day, point="day")
             break
         elif action == "4":
             # year and month
             year = get_date_part('year')
             month = get_date_part('month')
-            file_thru_csv(year,month, point="year", point2 = "month")
+            found_info =file_thru_csv(year,month, point="year", point2 = "month")
             break
         elif action == "5":
             # month and day
             month = get_date_part('month')
             day = get_date_part("day")
-            file_thru_csv(month,day, point="month", point2 = "day")
+            found_info =file_thru_csv(month,day, point="month", point2 = "day")
             break
         elif action == "6":
             # year and day
             year = get_date_part("year")
             day = get_date_part("day")
-            file_thru_csv(year,day, point="year", point2 = "day")
+            found_info = file_thru_csv(year,day, point="year", point2 = "day")
             break
         elif action == "7":
             # All three
             year = get_date_part("year")
             month = get_date_part('month')
             day = get_date_part("day")
-            file_thru_csv(year,month,day, point="year", point2 = "month",point3 = "day")
+            found_info = file_thru_csv(year,month,day, point="year", point2 = "month",point3 = "day")
             break
         else:
             print("Invalid input. Try again")
             continue
+    
     # have gotten all the stuff found, now disply for user
-    # I dont want to parrrrrrrrrrrrrrrrrrrrrrrsssssssssssssseeeeeeeeeeeeeeeeeee thiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiisssssssssssssssssssssssssssssssssssssssssssssss
-    # help
+    type_print(f"Here is what was found for {day}/{month}/{year}:\n")
+    for item in found_info:
+        # display income and expense catagories from csv
+        type_print(f"Income: {item[3]}, Expense: {item[4]}")
+    
+    time.sleep(3)
