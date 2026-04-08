@@ -145,9 +145,5 @@ class App(ctk.CTk):
             self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
 
 
-if __name__ == "__main__":
-    app = App(x = 0)
-    app.mainloop()
-
 #Lizzie_eevee
 #M1stB0rn
