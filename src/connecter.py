@@ -111,7 +111,7 @@ class App(ctk.CTk):
         self.current_widgets.append(self.data_label)
         self.x = 1
 
-    def show_new_page(self):
+    def show_currency_page(self):
         self.clear_window()
         self.title("Hello, you are singed in")
         self.button = ctk.CTkButton(self, text="Sign out", command=self.show_main_page)
@@ -133,7 +133,7 @@ class App(ctk.CTk):
                 self.check = check
                 self.current_csv = current_csv
             if self.check == True:
-                self.show_new_page()
+                self.show_currency_page()
                 pass
             else:
                 self.show_main_page()
@@ -145,7 +145,7 @@ class App(ctk.CTk):
             else:
                 self.current_csv, self.check = sign_up(name, password)
                 if self.check == True:
-                    self.show_new_page()
+                    self.show_currency_page()
                 #Create the new menu
                 else:
                     self.data_label.configure(text=f"Your username and password do not match the requirments...")
