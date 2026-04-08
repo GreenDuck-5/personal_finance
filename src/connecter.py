@@ -111,9 +111,30 @@ class App(ctk.CTk):
         self.current_widgets.append(self.data_label)
         self.x = 1
 
+    def callback(self,value):
+        self.currency = value
+
     def show_currency_page(self):
         self.clear_window()
         self.title("Hello, you are singed in")
+
+        self.data_label = ctk.CTkLabel(self, text="Please select your currency", font=("Helvetica", 14))
+        self.data_label.pack(pady=20)
+        self.current_widgets.append(self.data_label)
+
+
+
+
+
+        app = ctk.CTk()
+        words = ["USD", "EUROS", "BRITISH POUND", "JAPANESE YEN", "CHINESE RENMINBI"]
+        self.seg_button = ctk.CTkSegmentedButton(app, values=words, command=self.callback)
+        self.current_widgets.append(self.seg_button)
+
+
+
+
+
         self.button = ctk.CTkButton(self, text="Sign out", command=self.show_main_page)
         self.button.pack(expand=True)
         self.current_widgets.append(self.button) # Track the new widget
