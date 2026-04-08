@@ -2,7 +2,6 @@
 # Code for converting the current money being used and displayed
 
 # Have a default that is USD. Ryan can make a drop down for selecting the currency. Identify which currency is selected and apply a corresponding convertion expresion to base USD
-# BUILD
 
 # Currency being used: 
     # Euros -> USD_amound * 0.87
@@ -12,14 +11,19 @@
 
 def convert_money(selection):
     if selection == "USD":
-        pass
+        symbol = "$"
+        return symbol
     elif selection == "EUROS":
-        pass
+        symbol = "€"
+        return symbol
     elif selection == "BRITISH POUND":
-        pass
+        symbol = "£"
+        return symbol
     elif selection == "JAPANESE YEN":
-        pass
+        symbol = "¥"
+        return symbol
     elif selection == "CHINESE RENMINBI":
-        pass
+        symbol = "CN¥"
+        return symbol
     else:
         print("This should have not happened")
