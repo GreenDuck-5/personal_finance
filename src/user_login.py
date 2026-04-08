@@ -41,7 +41,7 @@ def sign_up(typed_user, typed_pass):
         with open("docs/user_login_info.csv", "a", newline="") as csv_file:
             fieldnames = ['username', 'password', 'csv_name']
             writer = csv.DictWriter(csv_file, fieldnames = fieldnames)
-            writer.writerow({'username': username, 'password': hashed_pass, 'csv_name': username})
+            writer.writerow({'username': username, 'password': hashed_pass, 'csv_name': f"docs/{username}.csv"})
     except Exception as reason:
         print(f"Could not open file in SIGN_UP func. Reason: {reason}")
     
