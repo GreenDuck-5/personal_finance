@@ -2,7 +2,8 @@
 
 
 # add budget function
-
+def add_budget():
+    pass
 
     # ask user to add budgetting categories or quit or edit income
     
