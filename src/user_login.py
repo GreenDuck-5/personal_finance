@@ -38,7 +38,7 @@ def sign_up(typed_user, typed_pass):
     # Add info to CSV
     hashed_pass = hash_item(the_password) # get the entered password hashed
     try:
-        with open("docs/user_login.csv", "a", newline="") as csv_file:
+        with open("docs/user_login_info.csv", "a", newline="") as csv_file:
             fieldnames = ['username', 'password', 'csv_name']
             writer = csv.DictWriter(csv_file, fieldnames = fieldnames)
             writer.writerow({'username': username, 'password': hashed_pass, 'csv_name': username})
