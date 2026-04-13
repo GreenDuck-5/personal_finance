@@ -4,9 +4,9 @@
 # add budget function
 
 class Budget:
-        def __init__(self, budget_category, budget_amount):
-            self.budget_category = budget_category
-            self.budget_amount = budget_amount
+    def __init__(self, budget_category, budget_amount):
+        self.budget_category = budget_category
+        self.budget_amount = budget_amount
 
 def add_budget():
 # ask user for the budget in that category
