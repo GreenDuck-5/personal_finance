@@ -51,30 +51,37 @@ class App(ctk.CTk):
         self.x = 2
         
 
-    def value(self,values):
-        self.values = values
-
-
-
 
     def view_graphs(self):
         pass
 
 
 
+    def edit_budgets(self):
+        pass
+
+    def edit_income_and_expenses(self):
+        pass
+
     def view_savings(self):
+        self.values = ""
         self.clear_window()
+        
+
         words = ["Create saving plan", "View saving plan", "Go back"]
-        self.seg_buttonss = ctk.CTkSegmentedButton(self, values=words, command=self.value)
+        self.seg_buttonss = ctk.CTkSegmentedButton(self, values=words, command = self.callback)
         self.seg_buttonss.pack(padx=20, pady=10)
         self.current_widgets.append(self.seg_buttonss)
+            
+
 
         if self.values == "Create saving plan":
             self.clear_window()
             saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time = create_saving_plan()
-            self.view_savings()
-
-
+            
+            self.buttun = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
+            self.buttun.pack(expand=True)
+            self.current_widgets.append(self.buttun)
 
 
         elif self.values == "View saving plan":
@@ -90,7 +97,7 @@ class App(ctk.CTk):
                 headerrs.pack(pady=(20, 10))
                 self.current_widgets.append(headerrs)
 
-                self.button = ctk.CTkButton(self, text="Go back", command=self.view_savings)
+                self.button = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
                 self.button.pack(expand=True)
                 self.current_widgets.append(self.button)
 
@@ -106,35 +113,28 @@ class App(ctk.CTk):
 
         elif self.values == "Go back":
             self.show_button_page()
-
-
-
-    def edit_budgets(self):
-        pass
-
-    def edit_income_and_expenses(self):
-        pass
-
-
+        
+        else:
+            pass
 
 
     def show_button_page(self):
         self.clear_window()
         #View charts of expenses button
-        save_bt = ctk.CTkButton(self, text="View Graphs", command=self.view_graphs())
+        save_bt = ctk.CTkButton(self, text="View Graphs", command=self.view_graphs)
         save_bt.pack(pady=30)
         self.current_widgets.append(save_bt)
 
         #Savings button (Send to new window)
-        save_bt = ctk.CTkButton(self, text="View Savings", command=self.view_savings())
+        save_bt = ctk.CTkButton(self, text="View Savings", command=self.view_savings)
         save_bt.pack(pady=30)
         self.current_widgets.append(save_bt)
         #Deal with budgets button (sent to new window)
-        save_bt = ctk.CTkButton(self, text="Edit Budgets", command=self.edit_budgets())
+        save_bt = ctk.CTkButton(self, text="Edit Budgets", command=self.edit_budgets)
         save_bt.pack(pady=30)
         self.current_widgets.append(save_bt)
         #Edit income and expenses 
-        save_bt = ctk.CTkButton(self, text="Edit income and expenses", command=self.edit_income_and_expenses())
+        save_bt = ctk.CTkButton(self, text="Edit income and expenses", command=self.edit_income_and_expenses)
         save_bt.pack(pady=30)
         self.current_widgets.append(save_bt)
 
@@ -208,7 +208,7 @@ class App(ctk.CTk):
         self.current_widgets.append(self.data_label)
         self.x = 1
 
-    def callback(self,value):
+    def callback(self, value):
         self.currency = value
         self.show_button_page()
 
@@ -270,5 +270,8 @@ class App(ctk.CTk):
                     self.data_label.configure(text=f"Your username and password do not match the requirments...")
 
 
+
+
+    
 #Lizzie_eevee
 #M1stB0rn
