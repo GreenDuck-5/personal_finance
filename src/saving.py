@@ -32,7 +32,7 @@ def create_saving_plan():
             print("Please enter valid input")
             continue
 
-    often = ("daily", "weekly", "yearly")
+    
 
     while True:
         deposit_amount = input(f"How much money are you going to put in every {deposit_often}?\n").lower()
@@ -56,38 +56,5 @@ def create_saving_plan():
     return saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time
 
 
-# view saving plan function:
-def view_saving(saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time):
-    print(f"""Your current saving plan is:
-How much are you saving to?: {saving_amount}
-How often are you adding money?: {deposit_often}
-How much are you putting in?: {deposit_amount}
-What is the monthly expense?: {monthly_expense}
-How long until finished saving?: {saving_time} months
-          """)
-    # give user option to edit the saving plan or quit
-    change = input("Do you want to edit the saving plan? y/n\n").lower()
-    # if user picks to edit
-    if change == "y":
-        create_saving_plan()
 
-#main menu function
-def saving_menu():
-    while True:
-        #ask user what they would like to do: create saving plan, view saving plan, quit
-        choice = input("1: Create Saving Plan\n2: View Saving Plan\n3: Quit\n").strip()
-
-        # if user picks create: run create saving plan function
-        if choice == "1":
-            saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time = create_saving_plan()
-
-    # if user picks view: run view saving plan function
-        elif choice == "2":
-            view_saving(saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time)
-
-    # if user picks quit: go back to main menu
-        else:
-            "return to main menu"
-            break
-
-saving_menu()
+        

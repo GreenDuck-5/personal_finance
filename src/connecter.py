@@ -1,5 +1,6 @@
 #RC 1st, runs most stuff
 import customtkinter as ctk
+from saving import *
 from user_login import sign_in, sign_up
 # Set the appearance and color theme
 ctk.set_appearance_mode("dark")
@@ -49,6 +50,99 @@ class App(ctk.CTk):
 
         self.x = 2
         
+
+    def value(self,values):
+        self.values = values
+
+
+
+
+    def view_graphs(self):
+        pass
+
+
+
+    def view_savings(self):
+        words = ["Create saving plan", "View saving plan", "Go back"]
+        self.seg_buttonss = ctk.CTkSegmentedButton(self, values=words, command=self.value)
+        self.seg_buttonss.pack(padx=20, pady=10)
+        self.current_widgets.append(self.seg_buttonss)
+
+        if self.values == "Create saving plan":
+            saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time = create_saving_plan()
+
+
+
+
+        elif self.values == "View saving plan":
+            if saving_amount != "" and deposit_often != "" and deposit_amount != "" and monthly_expense != "" and saving_time != "":
+                self.clear_window()
+                headerrs = ctk.CTkLabel(self, text=f"""Your current saving plan is:
+                            How much are you saving to?: {saving_amount}
+                            How often are you adding money?: {deposit_often}
+                            How much are you putting in?: {deposit_amount}
+                            What is the monthly expense?: {monthly_expense}
+                            How long until finished saving?: {saving_time} months
+          """, font =("Helvetica", 20, "bold"))
+                headerrs.pack(pady=(20, 10))
+                self.current_widgets.append(headerrs)
+
+                self.button = ctk.CTkButton(self, text="Go back", command=self.view_savings)
+                self.button.pack(expand=True)
+                self.current_widgets.append(self.button)
+
+
+
+
+
+            else:
+                headerr = ctk.CTkLabel(self, text="You have no saving plans", font =("Helvetica", 20, "bold"))
+                headerr.pack(pady=(20, 10))
+                self.current_widgets.append(headerr)
+
+
+        elif self.values == "Go back":
+            self.show_button_page()
+
+
+
+    def edit_budgets(self):
+        pass
+
+    def edit_income_and_expenses(self):
+        pass
+
+
+
+
+    def show_button_page(self):
+        self.clear_window()
+        #View charts of expenses button
+        save_bt = ctk.CTkButton(self, text="View Graphs", command=self.view_graphs())
+        save_bt.pack(pady=30)
+        self.current_widgets.append(save_bt)
+
+        #Savings button (Send to new window)
+        save_bt = ctk.CTkButton(self, text="View Savings", command=self.view_savings())
+        save_bt.pack(pady=30)
+        self.current_widgets.append(save_bt)
+        #Deal with budgets button (sent to new window)
+        save_bt = ctk.CTkButton(self, text="Edit Budgets", command=self.edit_budgets())
+        save_bt.pack(pady=30)
+        self.current_widgets.append(save_bt)
+        #Edit income and expenses 
+        save_bt = ctk.CTkButton(self, text="Edit income and expenses", command=self.edit_income_and_expenses())
+        save_bt.pack(pady=30)
+        self.current_widgets.append(save_bt)
+
+
+        #Sign out
+        self.button = ctk.CTkButton(self, text="Sign out", command=self.show_main_page)
+        self.button.pack(expand=True)
+        self.current_widgets.append(self.button)
+        
+
+
 
     def show_main_page(self):
 
@@ -113,6 +207,7 @@ class App(ctk.CTk):
 
     def callback(self,value):
         self.currency = value
+        self.show_button_page()
 
     def show_currency_page(self):
         self.clear_window()
@@ -124,12 +219,12 @@ class App(ctk.CTk):
 
 
 
-
-
-        app = ctk.CTk()
+        
         words = ["USD", "EUROS", "BRITISH POUND", "JAPANESE YEN", "CHINESE RENMINBI"]
-        self.seg_button = ctk.CTkSegmentedButton(app, values=words, command=self.callback)
+        self.seg_button = ctk.CTkSegmentedButton(self, values=words, command=self.callback)
+        self.seg_button.pack(padx=20, pady=10)
         self.current_widgets.append(self.seg_button)
+
 
 
 
