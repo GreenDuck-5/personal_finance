@@ -1,12 +1,24 @@
 # DJ, 1st, Saving Program
-
+import customtkinter as ctk
 # create saving plan function:
 def create_saving_plan():
+    current_widget = []
+    helper = ctk.CTk
+    def clear_windows(helper):
+        #Destroys all currently packed widgets in the main window.
+        for widget in current_widget:
+            widget.destroy()
+            current_widget.clear()
 
+    
     # ask user what amount theyre saving to
     while True:
-        saving_amount = input("What amount are you saving to?\n")
-        
+        clear_windows(helper)
+        name_entry = ctk.CTkEntry(helper, placeholder_text="Enter the amount you are saving...", width=250)
+        name_entry.pack(pady=10)
+        current_widget.append(name_entry)
+        saving_amount = name_entry.get()
+
         if saving_amount.isdigit():
             saving_amount = int(saving_amount)
             break
