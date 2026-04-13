@@ -63,19 +63,22 @@ class App(ctk.CTk):
 
 
     def view_savings(self):
+        self.clear_window()
         words = ["Create saving plan", "View saving plan", "Go back"]
         self.seg_buttonss = ctk.CTkSegmentedButton(self, values=words, command=self.value)
         self.seg_buttonss.pack(padx=20, pady=10)
         self.current_widgets.append(self.seg_buttonss)
 
         if self.values == "Create saving plan":
+            self.clear_window()
             saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time = create_saving_plan()
+            self.view_savings()
 
 
 
 
         elif self.values == "View saving plan":
-            if saving_amount != "" and deposit_often != "" and deposit_amount != "" and monthly_expense != "" and saving_time != "":
+            if saving_amount != ""  and deposit_often != "" and deposit_amount != "" and monthly_expense != "" and saving_time != "":
                 self.clear_window()
                 headerrs = ctk.CTkLabel(self, text=f"""Your current saving plan is:
                             How much are you saving to?: {saving_amount}
