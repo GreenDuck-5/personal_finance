@@ -13,6 +13,11 @@ class App(ctk.CTk):
         self.geometry("800x800") # Adjusted geometry to fit both pages if needed
         self.current_widgets = [] # List to keep track of widgets to destroy
         self.x = x
+        self.saving_amount = ""
+        self.deposit_amount = "" 
+        self.deposit_often = ""
+        self.monthly_expense = ""
+        self.saving_time = ""
 
         self.show_main_page()
 
@@ -21,6 +26,7 @@ class App(ctk.CTk):
         for widget in self.current_widgets:
             widget.destroy()
         self.current_widgets.clear()
+
 
     def show_sign_up_page(self):
         self.clear_window()
@@ -51,17 +57,53 @@ class App(ctk.CTk):
         self.x = 2
         
 
-
     def view_graphs(self):
         pass
-
 
 
     def edit_budgets(self):
         pass
 
+
     def edit_income_and_expenses(self):
         pass
+
+
+
+    def create_saving(self):
+        self.clear_window()
+        self.saving_amount, self.deposit_often, self.deposit_amount, self.monthly_expense, self.saving_time = create_saving_plan()
+        
+        self.buttun = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
+        self.buttun.pack(expand=True)
+        self.current_widgets.append(self.buttun)
+    
+    def view_saving(self):
+        if self.saving_amount != ""  and self.deposit_often != "" and self.deposit_amount != "" and self.monthly_expense != "" and self.saving_time != "":
+            self.clear_window()
+            headerrs = ctk.CTkLabel(self, text=f"""Your current saving plan is:
+                        How much are you saving to?: {self.saving_amount}
+                        How often are you adding money?: {self.deposit_often}
+                        How much are you putting in?: {self.deposit_amount}
+                        What is the monthly expense?: {self.monthly_expense}
+                        How long until finished saving?: {self.saving_time} months
+            """, font =("Helvetica", 20, "bold"))
+            headerrs.pack(pady=(20, 10))
+            self.current_widgets.append(headerrs)
+
+            self.button = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
+            self.button.pack(expand=True)
+            self.current_widgets.append(self.button)
+
+
+
+        else:
+            headerr = ctk.CTkLabel(self, text="You have no saving plans", font =("Helvetica", 20, "bold"))
+            headerr.pack(pady=(20, 10))
+            self.current_widgets.append(headerr)
+
+    def callbacks(self, value):
+            self.currency = value
 
     def view_savings(self):
         self.values = ""
@@ -69,46 +111,19 @@ class App(ctk.CTk):
         
 
         words = ["Create saving plan", "View saving plan", "Go back"]
-        self.seg_buttonss = ctk.CTkSegmentedButton(self, values=words, command = self.callback)
+        self.seg_buttonss = ctk.CTkSegmentedButton(self, values=words, command = self.callbacks)
         self.seg_buttonss.pack(padx=20, pady=10)
         self.current_widgets.append(self.seg_buttonss)
+        
             
 
 
         if self.values == "Create saving plan":
-            self.clear_window()
-            saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time = create_saving_plan()
-            
-            self.buttun = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
-            self.buttun.pack(expand=True)
-            self.current_widgets.append(self.buttun)
+            self.create_saving
 
 
         elif self.values == "View saving plan":
-            if saving_amount != ""  and deposit_often != "" and deposit_amount != "" and monthly_expense != "" and saving_time != "":
-                self.clear_window()
-                headerrs = ctk.CTkLabel(self, text=f"""Your current saving plan is:
-                            How much are you saving to?: {saving_amount}
-                            How often are you adding money?: {deposit_often}
-                            How much are you putting in?: {deposit_amount}
-                            What is the monthly expense?: {monthly_expense}
-                            How long until finished saving?: {saving_time} months
-          """, font =("Helvetica", 20, "bold"))
-                headerrs.pack(pady=(20, 10))
-                self.current_widgets.append(headerrs)
-
-                self.button = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
-                self.button.pack(expand=True)
-                self.current_widgets.append(self.button)
-
-
-
-
-
-            else:
-                headerr = ctk.CTkLabel(self, text="You have no saving plans", font =("Helvetica", 20, "bold"))
-                headerr.pack(pady=(20, 10))
-                self.current_widgets.append(headerr)
+            self.view_saving
 
 
         elif self.values == "Go back":
