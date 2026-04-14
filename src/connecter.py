@@ -68,80 +68,111 @@ class App(ctk.CTk):
     def edit_income_and_expenses(self):
         pass
 
-    def create_saving_plan(self):
-    
-        # ask user what amount theyre saving to
-        while True:
-            self.clear_window()
-            name_entry = ctk.CTkEntry(self, placeholder_text="Enter the amount you are saving...", width=250)
-            name_entry.pack(pady=10)
-            self.current_widgets.append(name_entry)
-            saving_amount = name_entry.get()
+    def continues(self):
+        self.saving_amount = self.name_entry.get()
+        if self.saving_amount.isdigit():
+            self.next_step()
+        else:
+            headerr = ctk.CTkLabel(self, text="Please enter a valid input", font =("Helvetica", 20, "bold"))
+            headerr.pack(pady=(20, 10))
+            self.current_widgets.append(headerr)
 
-            if saving_amount.isdigit():
-                saving_amount = int(saving_amount)
-                break
-            else:
-                headerr = ctk.CTkLabel(self, text="Please enter a valid input", font =("Helvetica", 20, "bold"))
-                headerr.pack(pady=(20, 10))
-                self.current_widgets.append(headerr)
-                continue
+    def next_step(self):
+        self.clear_window()
+        self.deposit_oftens = ctk.CTkEntry(self, placeholder_text="How often are you going to put money in? (You'll decide how much you'll deposit next): 1.) Daily      2.) Weekly    3.) Monthly", width=250)
+        self.deposit_oftens.pack(pady=10)
+        self.current_widgets.append(self.deposit_oftens)
+
+        self.button = ctk.CTkButton(self, text="continue", command=self.get_next_step)
+        self.button.pack(expand=True)
+        self.current_widgets.append(self.button)
+        
+    def get_next_step(self):
+        self.deposit_often = self.deposit_oftens.get()
+
+        
+        if self.deposit_often == "1":
+            self.deposit_often = "daily"
+            self.next_steps()
+        elif self.deposit_often == "2":
+            self.deposit_often = "weekly"
+            self.next_steps()
+        elif self.deposit_often == "3":
+            self.deposit_often = "monthly"
+            self.next_steps()
+        else:
+            headerr = ctk.CTkLabel(self, text="Please enter a valid input", font =("Helvetica", 20, "bold"))
+            headerr.pack(pady=(20, 10))
+            self.current_widgets.append(headerr)
+
+        
+
+    def next_steps(self):
+        self.clear_window()
+        self.deposit_amount = ctk.CTkEntry(self, placeholder_text=f"How much money are you going to put in every {self.deposit_often}?", width=250)
+        self.deposit_amount.pack(pady=10)
+        self.current_widgets.append(self.deposit_amount)
+
+
+        self.button = ctk.CTkButton(self, text="continue", command=self.get_next_steps)
+        self.button.pack(expand=True)
+        self.current_widgets.append(self.button)
+
+    def get_next_steps(self):
+        self.deposit_amounts = self.deposit_amount.get()
+
+        if self.deposit_amounts.isdigit():
+            self.deposit_amount = (self.deposit_amount)
+            self.finalize()
+            
+        else:
+            headerr = ctk.CTkLabel(self, text="Please enter a valid input", font =("Helvetica", 20, "bold"))
+            headerr.pack(pady=(20, 10))
+            self.current_widgets.append(headerr)
+
+    def finalize(self):
+        if self.deposit_often == "daily":
+            self.monthly_expense = (self.deposit_amount * 30)
+        elif self.deposit_often == "weekly":
+            self.monthly_expense = (self.deposit_amount * 4)
+        elif self.deposit_often == "monthly":
+            self.monthly_expense = self.deposit_amount
+        
+        self.saving_time = self.saving_amount / self.monthly_expense
+        self.show_button_page()
+
+    def create_saving_plan(self):
+        
+        
+        # ask user what amount theyre saving to
+        
+        self.clear_window()
+        self.name_entry = ctk.CTkEntry(self, placeholder_text="Enter the amount you are saving...", width=250)
+        self.name_entry.pack(pady=10)
+        self.current_widgets.append(self.name_entry)
+        
+
+        self.button = ctk.CTkButton(self, text="continue", command=self.continues)
+        self.button.pack(expand=True)
+        self.current_widgets.append(self.button)
+        
+                
         
         
         # ask user how much money theyre putting in and how often
-        while True:
-            self.clear_window()
-            deposit_often = ctk.CTkEntry(self, placeholder_text="How often are you going to put money in? (You'll decide how much you'll deposit next): 1.) Daily      2.) Weekly    3.) Monthly", width=250)
-            deposit_often.pack(pady=10)
-            self.current_widgets.append(deposit_often)
-
-            
-            if deposit_often == "1":
-                deposit_often = "daily"
-                break
-            elif deposit_often == "2":
-                deposit_often = "weekly"
-                break
-            elif deposit_often == "3":
-                deposit_often = "monthly"
-                break
-            else:
-                headerr = ctk.CTkLabel(self, text="Please enter a valid input", font =("Helvetica", 20, "bold"))
-                headerr.pack(pady=(20, 10))
-                self.current_widgets.append(headerr)
-                continue
-
-        
-
-        while True:
-            self.clear_window()
-            deposit_often = ctk.CTkEntry(self, placeholder_text=f"How much money are you going to put in every {deposit_often}?", width=250)
-            deposit_often.pack(pady=10)
-            self.current_widgets.append(deposit_often)
-            
-            if deposit_amount.isdigit():
-                deposit_amount = int(deposit_amount)
-                break
-            else:
-                print("Please enter valid input")
-                continue
+                
 
         # find monthly expense and add that as a budgetting category
-        if deposit_often == "daily":
-            monthly_expense = (deposit_amount * 30)
-        elif deposit_often == "weekly":
-            monthly_expense = (deposit_amount * 4)
-        elif deposit_often == "monthly":
-            monthly_expense = deposit_amount
-        
-        saving_time = saving_amount / monthly_expense
 
-        return saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time
 
     def create_saving(self):
 
         self.clear_window()
-        self.saving_amount, self.deposit_often, self.deposit_amount, self.monthly_expense, self.saving_time = self.create_saving_plan
+
+        self.create_saving_plan()
+
+
+        print(f"{self.saving_amount}, {self.deposit_often}, {self.deposit_amount}, {self.monthly_expense}, {self.saving_time}")
         
         self.buttun = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
         self.buttun.pack(expand=True)
