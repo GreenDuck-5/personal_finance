@@ -1,6 +1,5 @@
 #RC 1st, runs most stuff
 import customtkinter as ctk
-from saving import *
 from user_login import sign_in, sign_up
 # Set the appearance and color theme
 ctk.set_appearance_mode("dark")
@@ -18,6 +17,7 @@ class App(ctk.CTk):
         self.deposit_often = ""
         self.monthly_expense = ""
         self.saving_time = ""
+        self.values = ""
 
         self.show_main_page()
 
@@ -68,11 +68,80 @@ class App(ctk.CTk):
     def edit_income_and_expenses(self):
         pass
 
+    def create_saving_plan(self):
+    
+        # ask user what amount theyre saving to
+        while True:
+            self.clear_window()
+            name_entry = ctk.CTkEntry(self, placeholder_text="Enter the amount you are saving...", width=250)
+            name_entry.pack(pady=10)
+            self.current_widgets.append(name_entry)
+            saving_amount = name_entry.get()
 
+            if saving_amount.isdigit():
+                saving_amount = int(saving_amount)
+                break
+            else:
+                headerr = ctk.CTkLabel(self, text="Please enter a valid input", font =("Helvetica", 20, "bold"))
+                headerr.pack(pady=(20, 10))
+                self.current_widgets.append(headerr)
+                continue
+        
+        
+        # ask user how much money theyre putting in and how often
+        while True:
+            self.clear_window()
+            deposit_often = ctk.CTkEntry(self, placeholder_text="How often are you going to put money in? (You'll decide how much you'll deposit next): 1.) Daily      2.) Weekly    3.) Monthly", width=250)
+            deposit_often.pack(pady=10)
+            self.current_widgets.append(deposit_often)
+
+            
+            if deposit_often == "1":
+                deposit_often = "daily"
+                break
+            elif deposit_often == "2":
+                deposit_often = "weekly"
+                break
+            elif deposit_often == "3":
+                deposit_often = "monthly"
+                break
+            else:
+                headerr = ctk.CTkLabel(self, text="Please enter a valid input", font =("Helvetica", 20, "bold"))
+                headerr.pack(pady=(20, 10))
+                self.current_widgets.append(headerr)
+                continue
+
+        
+
+        while True:
+            self.clear_window()
+            deposit_often = ctk.CTkEntry(self, placeholder_text=f"How much money are you going to put in every {deposit_often}?", width=250)
+            deposit_often.pack(pady=10)
+            self.current_widgets.append(deposit_often)
+            
+            if deposit_amount.isdigit():
+                deposit_amount = int(deposit_amount)
+                break
+            else:
+                print("Please enter valid input")
+                continue
+
+        # find monthly expense and add that as a budgetting category
+        if deposit_often == "daily":
+            monthly_expense = (deposit_amount * 30)
+        elif deposit_often == "weekly":
+            monthly_expense = (deposit_amount * 4)
+        elif deposit_often == "monthly":
+            monthly_expense = deposit_amount
+        
+        saving_time = saving_amount / monthly_expense
+
+        return saving_amount, deposit_often, deposit_amount, monthly_expense, saving_time
 
     def create_saving(self):
+
         self.clear_window()
-        self.saving_amount, self.deposit_often, self.deposit_amount, self.monthly_expense, self.saving_time = create_saving_plan()
+        self.saving_amount, self.deposit_often, self.deposit_amount, self.monthly_expense, self.saving_time = self.create_saving_plan
         
         self.buttun = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
         self.buttun.pack(expand=True)
@@ -81,13 +150,7 @@ class App(ctk.CTk):
     def view_saving(self):
         if self.saving_amount != ""  and self.deposit_often != "" and self.deposit_amount != "" and self.monthly_expense != "" and self.saving_time != "":
             self.clear_window()
-            headerrs = ctk.CTkLabel(self, text=f"""Your current saving plan is:
-                        How much are you saving to?: {self.saving_amount}
-                        How often are you adding money?: {self.deposit_often}
-                        How much are you putting in?: {self.deposit_amount}
-                        What is the monthly expense?: {self.monthly_expense}
-                        How long until finished saving?: {self.saving_time} months
-            """, font =("Helvetica", 20, "bold"))
+            headerrs = ctk.CTkLabel(self, text=f"Your current saving plan is: How much are you saving to?: {self.saving_amount} \nHow often are you adding money?: {self.deposit_often} \nHow much are you putting in?: {self.deposit_amount} \nWhat is the monthly expense?: {self.monthly_expense} \nHow long until finished saving?: {self.saving_time} months", font =("Helvetica", 20, "bold"))
             headerrs.pack(pady=(20, 10))
             self.current_widgets.append(headerrs)
 
@@ -102,35 +165,29 @@ class App(ctk.CTk):
             headerr.pack(pady=(20, 10))
             self.current_widgets.append(headerr)
 
-    def callbacks(self, value):
-            self.currency = value
 
     def view_savings(self):
-        self.values = ""
+        
         self.clear_window()
         
-
-        words = ["Create saving plan", "View saving plan", "Go back"]
-        self.seg_buttonss = ctk.CTkSegmentedButton(self, values=words, command = self.callbacks)
-        self.seg_buttonss.pack(padx=20, pady=10)
-        self.current_widgets.append(self.seg_buttonss)
+        headers = ctk.CTkLabel(self, text="Please chose one of the following actions", font =("Helvetica", 20, "bold"))
+        headers.pack(pady=(20, 10))
+        self.current_widgets.append(headers)
         
-            
-
-
-        if self.values == "Create saving plan":
-            self.create_saving
-
-
-        elif self.values == "View saving plan":
-            self.view_saving
-
-
-        elif self.values == "Go back":
-            self.show_button_page()
         
-        else:
-            pass
+        save_bt = ctk.CTkButton(self, text="Create Saving Plan", command=self.create_saving)
+        save_bt.pack(pady=30)
+        self.current_widgets.append(save_bt)
+
+        save_bt = ctk.CTkButton(self, text="View saving plan", command=self.view_saving)
+        save_bt.pack(pady=30)
+        self.current_widgets.append(save_bt)
+
+
+        save_bt = ctk.CTkButton(self, text="Go back", command=self.show_button_page)
+        save_bt.pack(pady=30)
+        self.current_widgets.append(save_bt)
+        
 
 
     def show_button_page(self):
