@@ -1,61 +1,50 @@
-# LD Adding or removing an income/expense
 import csv
 import os
 
-# Know CSV path
-# Adding income/expense
-# If income or expense: Know how much, add that info to current CSV (gotten from signing in)
 def adding(csv_path, day, month, year, i_or_e, amount):
-    # Know if income or expense so I write to the right spot
     if i_or_e == "Income":
         column = 'income'
     elif i_or_e == "Expense":
         column = 'expense'
     else:
-        print("Something went wrong")
+        print("Invalid type.")
         return
 
-    # organize the specific data to be wiritten
     data = {
         'day': day,
         'month': month,
         'year': year,
-        column: amount
+        'income': '',
+        'expense': ''
     }
+    data[column] = amount
 
-    # write the data
     try:
-        with open(csv_path, mode="a+",newline="") as file:
-            reader = csv.reader(file)
-            fieldname = reader.fieldnames
-            writer = csv.DictWriter(file, fieldnames=fieldname)
+        with open(csv_path, mode="a+", newline='') as file:
+            file.seek(0)
+            reader = csv.DictReader(file)
+            fieldnames = reader.fieldnames
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            if file.tell() == 0:
+                writer.writeheader()
             writer.writerow(data)
     except Exception as e:
-        print(f"Could not open file in ADDING func in income_expense file. Reason: {e}")
+        print(f"Could not open file in ADDING. Reason: {e}")
 
-# Removing income/expense
-# get the date and amount that was spent. Go look for that in CSV and do the in and outfile thing from previous projects of mine
 def remove(csv_path, day, month, year, amount):
-    # Establish the temporary name so stuff isn't confused
-    temp_filename = "temp_"+csv_path
-
-    # open an infile (current) and outfile (file that will hold same data minus the removal)
+    temp_filename = "temp_" + csv_path
     try:
-        with open(csv_path, mode='r', newline='') as infile, open(temp_filename, mode='a', newline='') as outfile:
-            reader = csv.reader(infile)
-            fieldname = reader.fieldnames
-            writer = csv.DictWriter(outfile, fieldnames=fieldname)
+        with open(csv_path, mode='r', newline='') as infile, open(temp_filename, mode='w', newline='') as outfile:
+            reader = csv.DictReader(infile)
+            fieldnames = reader.fieldnames
+            writer = csv.DictWriter(outfile, fieldnames=fieldnames)
             writer.writeheader()
 
             for row in reader:
-                if day ==  row[0] and month == row[1] and year == row[2] and (amount == row[3] or amount == row[4]):
-                    # this means that we have encountered want we want to delete. So we dont write it and go to next iteration
-                    continue
-                else:
-                    # the item does not match what we want gone so we write it because we want to keep it
-                    writer.writerow(row)
-                    
-        # now that we have removed the item, replace the old file with the updated temp file and make the names the same
+                if row['day'] == str(day) and row['month'] == str(month) and row['year'] == str(year):
+                    if row['income'] == str(amount) or row['expense'] == str(amount):
+                        continue
+                writer.writerow(row)
         os.replace(temp_filename, csv_path)
     except Exception as e:
-        print(f"Could not open file in REMOVE func in income_expense file. Reason: {e}")
+        print(f"Could not open file in REMOVE. Reason: {e}")

@@ -1,3 +1,6 @@
 username,password,csv_name
 lizzie_eevee,70af2f2fce50b5bdc4acaf03e1f52871cd6891617f75a8302ab3efbe8b06a0b8,docs/lizzie_eevee.csv
-help,a84a47cd9dc557c40781db70c5523b3d024d1bbb2c74f0d351b3723360c0878e,docs/help.csv
+username,password,csv_name
+Hellow,804ed33e58f14e6242a1c8273bfb1dc5c2f9685695f1bd82226af271daf41074,docs/Hellow.csv
+username,password,csv_name
+Hello,a554accf74941f4ab5ee837c53a512388ec387c60c702efed9052b623a638ea8,docs/Hello.csv
