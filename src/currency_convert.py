@@ -1,29 +1,21 @@
-# LD 1st
-# Code for converting the current money being used and displayed
-
-# Have a default that is USD. Ryan can make a drop down for selecting the currency. Identify which currency is selected and apply a corresponding convertion expresion to base USD
-
-# Currency being used: 
-    # Euros -> USD_amound * 0.87
-    # British Pound -> USD_amound * 0.75
-    # Japanese Yen -> USD_amount * 159.60
-    # Chinese Renminbi -> USD_amound * 6.91
-
-def convert_money(selection):
+def convert_money(amount_usd, selection):
     if selection == "USD":
         symbol = "$"
-        return symbol
+        converted_amount = amount_usd
     elif selection == "EUROS":
         symbol = "€"
-        return symbol
+        converted_amount = amount_usd * 0.87
     elif selection == "BRITISH POUND":
         symbol = "£"
-        return symbol
+        converted_amount = amount_usd * 0.75
     elif selection == "JAPANESE YEN":
         symbol = "¥"
-        return symbol
+        converted_amount = amount_usd * 159.60
     elif selection == "CHINESE RENMINBI":
         symbol = "CN¥"
-        return symbol
+        converted_amount = amount_usd * 6.91
     else:
-        print("This should have not happened")
+        print("This should not have happened")
+        symbol = ""
+        converted_amount = amount_usd
+    return symbol, converted_amount

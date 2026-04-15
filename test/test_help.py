@@ -1,126 +1,299 @@
+import tkinter as tk
 import customtkinter as ctk
+import csv
+import os
+import time
+import hashlib
 from user_login import sign_in, sign_up
-# Set the appearance and color theme
+from helper_funcs import is_num, type_print
+from income_expense import adding, remove
+from get_csv_info import find_stuff_from_date
+
+# Set appearance
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 class App(ctk.CTk):
-    def __init__(self):
+    def __init__(self, x):
         super().__init__()
-        self.title("Main Application")
-        self.geometry("800x800") # Adjusted geometry to fit both pages if needed
-        self.current_widgets = [] # List to keep track of widgets to destroy
+        self.title("Personal Finance Manager")
+        self.geometry("900x700")
+        self.current_widgets = []
+        self.x = x  # login or signup flow indicator
+
+        # User data
+        self.current_csv = ""
+        self.username = ""
+        self.saving_amount = None
+        self.deposit_often = None
+        self.amount_per_period = None
+        self.period_label = ""
 
         self.show_main_page()
 
     def clear_window(self):
-        #Destroys all currently packed widgets in the main window.
         for widget in self.current_widgets:
             widget.destroy()
         self.current_widgets.clear()
 
+    # --- Main Page ---
+    def show_main_page(self):
+        self.clear_window()
+        self.title("Main Page")
+        btn_signin = ctk.CTkButton(self, text="Sign in", command=self.show_sign_in_page)
+        btn_signin.pack(pady=20)
+        self.current_widgets.append(btn_signin)
+
+        btn_signup = ctk.CTkButton(self, text="Create account", command=self.show_sign_up_page)
+        btn_signup.pack(pady=20)
+        self.current_widgets.append(btn_signup)
+
+        btn_exit = ctk.CTkButton(self, text="Exit", command=self.destroy)
+        btn_exit.pack(pady=20)
+        self.current_widgets.append(btn_exit)
+
+    # --- Sign In ---
+    def show_sign_in_page(self):
+        self.clear_window()
+        self.title("Sign In")
+        lbl = ctk.CTkLabel(self, text="Enter username and password")
+        lbl.pack(pady=10)
+        self.current_widgets.append(lbl)
+
+        self.entry_username = ctk.CTkEntry(self, placeholder_text="Username")
+        self.entry_username.pack(pady=5)
+        self.current_widgets.append(self.entry_username)
+
+        self.entry_password = ctk.CTkEntry(self, placeholder_text="Password", show="*")
+        self.entry_password.pack(pady=5)
+        self.current_widgets.append(self.entry_password)
+
+        btn_login = ctk.CTkButton(self, text="Log In", command=self.handle_sign_in)
+        btn_login.pack(pady=10)
+        self.current_widgets.append(btn_login)
+
+        self.message_label = ctk.CTkLabel(self, text="")
+        self.message_label.pack(pady=10)
+        self.current_widgets.append(self.message_label)
+
+    def handle_sign_in(self):
+        username = self.entry_username.get()
+        password = self.entry_password.get()
+        csv_path, success = sign_in(username, password)
+        if success:
+            self.current_csv = csv_path
+            self.username = username
+            self.show_user_dashboard()
+        else:
+            self.message_label.configure(text="Incorrect login. Try again.")
+
+    # --- Sign Up ---
     def show_sign_up_page(self):
         self.clear_window()
         self.title("Sign Up")
+        lbl = ctk.CTkLabel(self, text="Create a new account")
+        lbl.pack(pady=10)
+        self.current_widgets.append(lbl)
 
-        header = ctk.CTkLabel(self, text="Enter Your Username and password", font=("Helvetica", 20, "bold"))
-        header.pack(pady=(20, 10))
-        self.current_widgets.append(header)
+        self.entry_new_username = ctk.CTkEntry(self, placeholder_text="New Username")
+        self.entry_new_username.pack(pady=5)
+        self.current_widgets.append(self.entry_new_username)
 
-        self.name_entry = ctk.CTkEntry(self, placeholder_text="Enter your username...", width=250)
-        self.name_entry.pack(pady=10)
-        self.current_widgets.append(self.name_entry)
+        self.entry_new_password = ctk.CTkEntry(self, placeholder_text="New Password", show="*")
+        self.entry_new_password.pack(pady=5)
+        self.current_widgets.append(self.entry_new_password)
 
-        self.password_entry = ctk.CTkEntry(self, placeholder_text= "Enter your password", width = 250)
-        self.password_entry.pack(pady=10)
-        self.current_widgets.append(self.password_entry)
+        btn_signup = ctk.CTkButton(self, text="Sign Up", command=self.handle_sign_up)
+        btn_signup.pack(pady=10)
+        self.current_widgets.append(btn_signup)
 
-        #Create save button that imploys lizzies sing up function
-        save_bt = ctk.CTkButton(self, text="Save & Return", command=self.get_data(2))
-        save_bt.pack(pady=30)
-        self.current_widgets.append(save_bt)
+        self.signup_message = ctk.CTkLabel(self, text="")
+        self.signup_message.pack(pady=10)
+        self.current_widgets.append(self.signup_message)
 
-        
-        self.data_label = ctk.CTkLabel(self, text="Enter the password you would like\nPassword must be 12 characters long (maximum is 40), have a number, have an uppercase, have a lowercase, have a special character, and NO spaces\n", font=("Helvetica", 14))
-        self.data_label.pack(pady=20)
-        self.current_widgets.append(self.data_label)
-        
+    def handle_sign_up(self):
+        username = self.entry_new_username.get()
+        password = self.entry_new_password.get()
+        csv_path, success = sign_up(username, password)
+        if success:
+            self.current_csv = csv_path
+            self.username = username
+            self.show_user_dashboard()
+        else:
+            self.signup_message.configure(text="Sign-up failed. Try different credentials.")
 
-    def show_main_page(self):
-
+    # --- User Dashboard ---
+    def show_user_dashboard(self):
         self.clear_window()
-        self.title("Main Application")
+        self.title(f"Welcome {self.username}")
 
-        # Center Button to open the settings view
-        self.button = ctk.CTkButton(self, text="Sign in", command=self.show_sign_in_page(1))
-        self.button.pack(expand=True)
-        self.current_widgets.append(self.button) # Track the new widget
+        btn_create_saving = ctk.CTkButton(self, text="Create Saving Plan", command=self.create_saving_plan)
+        btn_create_saving.pack(pady=10)
+        self.current_widgets.append(btn_create_saving)
 
-        self.button.place(x= 330, y= 200)
+        btn_add_income = ctk.CTkButton(self, text="Add Income", command=self.add_income)
+        btn_add_income.pack(pady=10)
+        self.current_widgets.append(btn_add_income)
 
-        # Center Button to open the sign up page
-        self.buttons = ctk.CTkButton(self, text="Create account", command=self.show_sign_up_page)
-        self.buttons.pack(expand=True)
-        self.current_widgets.append(self.buttons) # Track the new widget
-        
-        self.buttons.place(x= 330, y= 325)
+        btn_add_expense = ctk.CTkButton(self, text="Add Expense", command=self.add_expense)
+        btn_add_expense.pack(pady=10)
+        self.current_widgets.append(btn_add_expense)
 
-        # Center Button to exit
-        self.butto = ctk.CTkButton(self, text="Exit", command=self.destroy)
-        self.butto.pack(expand=True)
-        self.current_widgets.append(self.butto) # Track the new widget
-        
-        self.butto.place(x= 330, y= 450)
+        btn_view_data = ctk.CTkButton(self, text="View Data", command=self.view_data)
+        btn_view_data.pack(pady=10)
+        self.current_widgets.append(btn_view_data)
 
-        # Optional label to show saved data
-        self.data_label = ctk.CTkLabel(self, text="No data saved yet", font=("Helvetica", 14))
-        self.data_label.pack(pady=20)
-        self.current_widgets.append(self.data_label)
+        btn_signout = ctk.CTkButton(self, text="Sign Out", command=self.show_main_page)
+        btn_signout.pack(pady=10)
+        self.current_widgets.append(btn_signout)
 
-    def show_sign_in_page(self):
+    # --- Create Saving Plan ---
+    def create_saving_plan(self):
         self.clear_window()
-        self.title("User Sign in")
+        lbl = ctk.CTkLabel(self, text="Enter total savings goal")
+        lbl.pack(pady=5)
+        self.saving_entry = ctk.CTkEntry(self)
+        self.saving_entry.pack(pady=5)
 
-        # Header Label
-        header = ctk.CTkLabel(self, text="Enter Your Username and password", font=("Helvetica", 20, "bold"))
-        header.pack(pady=(20, 10))
-        self.current_widgets.append(header)
+        # Frequency options
+        self.freq_var = ctk.StringVar(value="monthly")
+        ctk.CTkRadioButton(self, text="Daily", variable=self.freq_var, value="daily").pack()
+        ctk.CTkRadioButton(self, text="Weekly", variable=self.freq_var, value="weekly").pack()
+        ctk.CTkRadioButton(self, text="Monthly", variable=self.freq_var, value="monthly").pack()
 
-        # Text Input (Name)
-        self.name_entry = ctk.CTkEntry(self, placeholder_text="Enter your username...", width=250)
-        self.name_entry.pack(pady=10)
-        self.current_widgets.append(self.name_entry)
+        btn_save = ctk.CTkButton(self, text="Save Plan", command=self.save_saving)
+        btn_save.pack(pady=10)
 
+    def save_saving(self):
+        amount_str = self.saving_entry.get()
+        try:
+            amount = float(amount_str)
+            self.saving_amount = amount
+        except:
+            self.message_box("Invalid amount entered")
+            return
 
-        #password
-        self.password_entry = ctk.CTkEntry(self, placeholder_text= "Enter your password", width = 250)
-        self.password_entry.pack(pady=10)
-        self.current_widgets.append(self.password_entry)
+        self.deposit_often = self.freq_var.get()
 
-        # Save Button
-        save_btn = ctk.CTkButton(self, text="Save & Return", command=self.get_data)
-        save_btn.pack(pady=30)
-        self.current_widgets.append(save_btn)
+        # Set amount per period
+        if self.deposit_often == "daily":
+            self.amount_per_period = self.saving_amount / 30
+            self.period_label = "per day"
+        elif self.deposit_often == "weekly":
+            self.amount_per_period = self.saving_amount / 4
+            self.period_label = "per week"
+        elif self.deposit_often == "monthly":
+            self.amount_per_period = self.saving_amount / 12
+            self.period_label = "per month"
+        else:
+            self.amount_per_period = None
 
-    def get_data(self,x):
-        # Retrieve the values from inputs
-        name = self.name_entry.get()
-        password = self.password_entry.get()
-        print(f"User Name: {name}, Password: {password}")
-        
-        # Update the main page's label before returning to it
-        if x == 1: #Sign in
-            current_csv = sign_in(name,password)
-            self.show_main_page()  #NEED TO PLUG IN LIZZIES CODE
-            self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
+        self.view_saving()
 
-        if x == 2: #sign up
-            current_csv = sign_up(name, password)
-            self.show_main_page()  #NEED TO PLUG IN LIZZIES CODE
-            self.data_label.configure(text=f"Your username and password do not match, please either create an account or log in correctly...")
+    def view_saving(self):
+        self.clear_window()
+        info = f"Your saving plan:\nTotal: ${self.saving_amount}\nFrequency: {self.deposit_often}\nAmount {self.period_label}: ${self.amount_per_period:.2f}"
+        lbl = ctk.CTkLabel(self, text=info)
+        lbl.pack(pady=10)
+
+        btn_back = ctk.CTkButton(self, text="Back", command=self.show_user_dashboard)
+        btn_back.pack(pady=10)
+        self.current_widgets.append(lbl)
+        self.current_widgets.append(btn_back)
+
+    def message_box(self, message):
+        msg = ctk.CTkLabel(self, text=message)
+        msg.pack()
+        self.current_widgets.append(msg)
+        self.after(3000, lambda: self.current_widgets.remove(msg) or msg.destroy())
+
+    # --- Income and Expense ---
+    def add_income(self):
+        self.clear_window()
+        lbl = ctk.CTkLabel(self, text="Add Income")
+        lbl.pack(pady=5)
+        self.income_entry = ctk.CTkEntry(self)
+        self.income_entry.pack(pady=5)
+
+        btn_add = ctk.CTkButton(self, text="Add Income", command=self.save_income)
+        btn_add.pack(pady=10)
+
+        btn_back = ctk.CTkButton(self, text="Back", command=self.show_user_dashboard)
+        btn_back.pack(pady=10)
+
+    def save_income(self):
+        amount_str = self.income_entry.get()
+        try:
+            amount = float(amount_str)
+            # Add to CSV
+            adding(self.current_csv, "NA", "NA", "NA", "Income", amount)
+            self.message_box("Income added.")
+        except:
+            self.message_box("Invalid amount.")
+
+    def add_expense(self):
+        self.clear_window()
+        lbl = ctk.CTkLabel(self, text="Add Expense")
+        lbl.pack(pady=5)
+        self.expense_entry = ctk.CTkEntry(self)
+        self.expense_entry.pack(pady=5)
+
+        btn_add = ctk.CTkButton(self, text="Add Expense", command=self.save_expense)
+        btn_add.pack(pady=10)
+
+        btn_back = ctk.CTkButton(self, text="Back", command=self.show_user_dashboard)
+        btn_back.pack(pady=10)
+
+    def save_expense(self):
+        amount_str = self.expense_entry.get()
+        try:
+            amount = float(amount_str)
+            adding(self.current_csv, "NA", "NA", "NA", "Expense", amount)
+            self.message_box("Expense added.")
+        except:
+            self.message_box("Invalid amount.")
+
+    # --- View Data ---
+    def view_data(self):
+        self.clear_window()
+        lbl = ctk.CTkLabel(self, text="Data from CSV")
+        lbl.pack(pady=5)
+        self.data_text = ctk.CTkTextbox(self, width=800, height=400)
+        self.data_text.pack(pady=5)
+
+        # Read CSV and display
+        try:
+            with open(self.current_csv, 'r') as f:
+                content = f.read()
+            self.data_text.insert("0.0", content)
+        except:
+            self.data_text.insert("0.0", "No data available.")
+        btn_back = ctk.CTkButton(self, text="Back", command=self.show_user_dashboard)
+        btn_back.pack(pady=10)
+        self.current_widgets.append(self.data_text)
+        self.current_widgets.append(btn_back)
+
+    # --- Utility ---
+    def currency_convert(self, amount_usd, selection):
+        symbol, converted = self.convert_money(selection, amount_usd)
+        return symbol, converted
+
+    def convert_money(self, selection, usd_amount):
+        if selection == "USD":
+            symbol = "$"
+            return symbol, usd_amount
+        elif selection == "EUROS":
+            return "€", usd_amount * 0.87
+        elif selection == "BRITISH POUND":
+            return "£", usd_amount * 0.75
+        elif selection == "JAPANESE YEN":
+            return "¥", usd_amount * 159.60
+        elif selection == "CHINESE RENMINBI":
+            return "CN¥", usd_amount * 6.91
+        else:
+            return "", usd_amount
+
+# --- Run the app ---
 if __name__ == "__main__":
-    app = App()
+    app = App(x=0)
     app.mainloop()
-
-#Lizzie_eevee
-#M1stB0rn
